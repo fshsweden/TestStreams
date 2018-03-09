@@ -1,0 +1,161 @@
+Interfaces are stateless
+Interfaces provide behaviour, not state
+Abstract classes provide bahaviour and state
+
+
+Functional Interfaces
+
+    Any interface with a single abstract method
+
+    Static and default methods allowed
+
+    examples:
+
+    Scalable
+    Runnable
+    Comparable
+    Comparator
+    Iterable
+
+Pure Functional Interfaces
+
+    An FI intenden to be implemented by stateless classes
+
+    examples:
+
+    Scalable: not pure 
+    Runnable: not pure 
+    Comparable: not pure 
+    Comparator: not pure 
+
+@FunctionalInterface
+
+    semi-formal
+    intende for pure fi 
+    compiler checks single abstract method property (exception if > 1 method)
+
+Comparator is annotated with @FunctionalInterface
+Comparable is not
+
+
+
+
+
+A function accepting an object
+
+public interface Consumer<T> {
+    void accept(T t);
+}
+
+public interface Supplier<T> {
+    T get();
+}
+
+
+Lambda expressions is a more compact alternative to anonymous classes 
+(Removing param types, parenttheses, curly braces)
+
+Lambda expression can access local variables of the enclosing method provided they are 'effectively final'
+(not changed)
+
+Java 8 FI
+
+    Runnable and Callable (Multithread)
+    ActionListener (GUI)
+    Comparable and Comparator (Sorting)
+
+Functional Interfaces, by type
+
+    Function type           FI name
+    ---------------------   ---------------
+    nothing -> T            Supplier
+    T -> nothing            Consumer
+    T -> T                  UnaryOperator
+    T,T -> T                BinaryOperator
+    S -> T                  Function
+    T -> boolean            Predicate
+
+
+    interface UnaryOperator<T> {
+        T apply(T t);
+    }
+
+    public interface BinaryOperator<T> {
+        T apply(T a, T b);
+    }
+
+    public interface Function<T, R> {
+        R apply(T t);
+    }
+
+    interface Predicate<T> {
+        boolean test(T t);
+    }
+
+
+// COMPOSING FUNCTIONS
+
+Create complex functions from simpler ones
+
+Predicate, Consumer, Function and Comparator
+
+
+a) Predicate
+
+        Predicate<T> a = , b = 
+        Predicate<t> c = a.and(b),
+                     d = a.or(b),
+                     e = a.negate();
+
+ b) Consumers
+
+        Consumer<T> a = , b = ;
+        Consumer<T> c = a.andThen(b);
+
+        Example:
+
+        PrintWriter writer = new PrintWriter("filename.txt");
+        Consumer<String> logger = writer::println; // instance method reference!
+        Consumer<String> screener = System.out::println;  // System.out object
+        Consumer<String> both = screener.andThen(logger);
+
+        both.accept("Program Started");
+
+c) Functions
+
+        Can be composed using andThen
+
+        Example:
+
+        Function<Int,String> f = ...;   // Converts an Int as a String
+        Function<String,String> g = ;   // Adds more formatting or something
+
+        Function<Int,String> both = f.andThen(g);
+
+        both.apply(23);
+
+d) Comparators
+
+        Method "thenComparing"
+        Objective: Compare Employees by name, then by salary
+
+        Comparator<Employee>
+            byName = Comparator.comparing(Employee::getName);  // class method reference
+
+        Comparator<Employee>
+            bySalary = Comparator.comparingInt(Employee::getSalary);  // specialized version! class method reference
+
+        Comparator<Employee>
+            byNameAndSalary = byName.thenComparing(bySalary);
+
+
+
+
+stream operators
+
+        initial
+
+        intermediate
+
+        terminator
+
